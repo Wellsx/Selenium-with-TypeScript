@@ -36,4 +36,12 @@ describe('Login Tests', () => {
     await inventoryPage.addMultipleItemsToCart()
     await inventoryPage.getCartBadgeNumber(2)
   });
+  it('should sort the items low-to-high', async () => {
+    await inventoryPage.sortLowToHigh();
+    await inventoryPage.assertSortOrder("lowToHigh");
+  });
+  it('should sort the items high-to-low', async () => {
+    await inventoryPage.sortHighToLow()
+    await inventoryPage.assertSortOrder("highToLow");
+  });
 })

@@ -14,6 +14,9 @@ export class InventoryPage {
   private addToCartButton = By.css('button[id^="add-to-cart-"]')
   private removeButton = By.css('button[id^="remove-"]')
   private cartBadge = By.className("shopping_cart_badge")
+  private itemPrice = By.className("inventory_item_price")
+  private lowToHigh = By.css('option[value="lohi"]')
+  private highToLow = By.css('option[value="hilo"]')
   
 
   constructor(browser: Browser) {
@@ -56,8 +59,6 @@ export class InventoryPage {
       await addToCartButton.click();
     }
 
-
-
   }
   public async getCartBadgeNumber(number: number): Promise<void> {
     const cartBadge = await this.browser.get(this.cartBadge);
@@ -70,8 +71,52 @@ export class InventoryPage {
     const removeButton = await this.browser.get(this.removeButton)
     await removeButton.click();
     await this.browser.waitUntilElementStale(removeButton);
-  
-    
+     
   }
-  
-}
+
+  public async sortLowToHigh(): Promise<void> {
+    const sortDropdown = await this.browser.get(this.sortMenu)
+      await sortDropdown.click()
+      const option = await this.browser.get(this.lowToHigh)
+      await option.click()
+  }
+  public async sortHighToLow(): Promise<void> {
+    const sortDropdown = await this.browser.get(this.sortMenu)
+      await sortDropdown.click()
+      const option = await this.browser.get(this.highToLow)
+      await option.click()
+  }
+
+  public async assertSortOrder(sortOrder: 'lowToHigh' | 'highToLow'): Promise<void> {
+    const inventoryList = await this.browser.get(this.inventoryList);
+    const inventoryItems = await inventoryList.findElements(this.inventoryItem);
+    
+    const sortedItems = await Promise.all(inventoryItems.map(async (item) => {
+      const priceElement = await item.findElement(this.itemPrice);
+      const priceText = await priceElement.getText();
+      const price = parseFloat(priceText.split('$')[1]);
+      return { item, price };
+    }));
+    
+    sortedItems.sort((item1, item2) => {
+      if (sortOrder === 'lowToHigh') {
+        return item1.price - item2.price;
+      } else if (sortOrder === 'highToLow') {
+        return item2.price - item1.price;
+      }
+      return 0;
+    });
+    
+    const firstItem = sortedItems[0];
+    const lastItem = sortedItems[sortedItems.length - 1];
+    
+    const firstItemPrice = firstItem.price;
+    const lastItemPrice = lastItem.price;
+    
+    if (sortOrder === 'lowToHigh') {
+      expect(firstItemPrice).to.be.lessThan(lastItemPrice);
+    } else if (sortOrder === 'highToLow') {
+      expect(firstItemPrice).to.be.greaterThan(lastItemPrice);
+    }
+  }
+};
