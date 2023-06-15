@@ -6,4 +6,7 @@ export const data = {
     empty_pass: "",
     invalid_user: "invalid",
     invalid_pass: "invalid",
+    firstName: "Stefan",
+    lastName: "Test",
+    zipCode: "78000",
   };

@@ -5,7 +5,7 @@ import { CartPage } from '../pages/cartPage';
 import { InventoryPage } from '../pages/inventoryPage';
 
 
-describe.only('User menu tests', () => {
+describe('Cart page tests', () => {
     let browser: Browser;
     let loginPage: LoginPage;
     let cartPage: CartPage
