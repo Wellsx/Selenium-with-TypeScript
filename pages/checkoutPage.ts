@@ -3,7 +3,7 @@ import { Browser } from './browser';
 import { expect } from 'chai';
 import { data } from '../support/data';
 
-export class CartPage {
+export class CheckoutPage {
   private browser: Browser;
 
   private continueButton = By.id("continue")
@@ -27,9 +27,26 @@ export class CartPage {
     firstName.sendKeys(data.firstName)
     const lastName = await this.browser.get(this.lastNameInput)
     await this.browser.assertWebElementVisibility(lastName)
-    firstName.sendKeys(data.lastName)
+    lastName.sendKeys(data.lastName)
     const zipCode = await this.browser.get(this.zipInput)
     await this.browser.assertWebElementVisibility(zipCode)
-    firstName.sendKeys(data.zipCode)
+    zipCode.sendKeys(data.zipCode)
+  }
+  public async clickContinue(): Promise<void> {
+    const continueButton = await this.browser.get(this.continueButton)
+    await this.browser.assertWebElementVisibility(continueButton)
+    await continueButton.click();
+  }
+  public async clickFinish(): Promise<void> {
+    const finishButton = await this.browser.get(this.finishButton)
+    await this.browser.assertWebElementVisibility(finishButton)
+    await finishButton.click();
+  }
+  public async assertOrder(): Promise<void> {
+    const orderHeader = await this.browser.get(this.orderHeader)
+    await this.browser.assertWebElementVisibility(orderHeader)
+    const text = await orderHeader.getText();
+    expect(text).to.equal("Thank you for your order!")
+
   }
 }
