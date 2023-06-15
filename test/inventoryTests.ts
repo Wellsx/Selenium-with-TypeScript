@@ -3,7 +3,7 @@ import { Browser } from '../pages/browser';
 import { data } from '../support/data';
 import { InventoryPage } from '../pages/inventoryPage';
 
-describe('Login Tests', () => {
+describe('Inventory page tests', () => {
   let browser: Browser;
   let loginPage: LoginPage;
   let inventoryPage: InventoryPage;
@@ -17,9 +17,9 @@ describe('Login Tests', () => {
            
   });
 
- /*  afterEach(async () => {
+  afterEach(async () => {
     await browser.quit();
-  }); */
+  });
 
   it('should display all inventory items', async () => {
     await inventoryPage.getInventoryItems()
@@ -43,5 +43,9 @@ describe('Login Tests', () => {
   it('should sort the items high-to-low', async () => {
     await inventoryPage.sortHighToLow()
     await inventoryPage.assertSortOrder("highToLow");
+  });
+  it('should sort the items alphabetically A-Z', async () => {
+    await inventoryPage.sortAtoZ()
+    await inventoryPage.assertAlphabeticalSortOrder()
   });
 })

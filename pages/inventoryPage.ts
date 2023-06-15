@@ -17,6 +17,9 @@ export class InventoryPage {
   private itemPrice = By.className("inventory_item_price")
   private lowToHigh = By.css('option[value="lohi"]')
   private highToLow = By.css('option[value="hilo"]')
+  private sortAZ = By.css('option[value="az"]')
+  private sortZA = By.css('option[value="za"]')
+  private itemName = By.className("inventory_item_name")
   
 
   constructor(browser: Browser) {
@@ -86,6 +89,18 @@ export class InventoryPage {
       const option = await this.browser.get(this.highToLow)
       await option.click()
   }
+  public async sortAtoZ(): Promise<void> {
+    const sortDropdown = await this.browser.get(this.sortMenu)
+      await sortDropdown.click()
+      const option = await this.browser.get(this.sortAZ)
+      await option.click()
+  }
+  public async sortZtoA(): Promise<void> {
+    const sortDropdown = await this.browser.get(this.sortMenu)
+      await sortDropdown.click()
+      const option = await this.browser.get(this.sortZA)
+      await option.click()
+  }
 
   public async assertSortOrder(sortOrder: 'lowToHigh' | 'highToLow'): Promise<void> {
     const inventoryList = await this.browser.get(this.inventoryList);
@@ -119,4 +134,30 @@ export class InventoryPage {
       expect(firstItemPrice).to.be.greaterThan(lastItemPrice);
     }
   }
+
+  private isSortedAlphabetically(arr: string[]): boolean {
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i - 1].localeCompare(arr[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+  public async assertAlphabeticalSortOrder(): Promise<void> {
+    const inventoryList = await this.browser.get(this.inventoryList);
+    const inventoryItems = await inventoryList.findElements(this.inventoryItem);
+    
+    const sortedItems = await Promise.all(inventoryItems.map(async (item) => {
+      const nameElement = await item.findElement(this.itemName);
+      const name = await nameElement.getText();
+      return { item, name };
+    }));
+    
+    const sortedNames = sortedItems.map((item) => item.name);
+    const isSorted = this.isSortedAlphabetically(sortedNames);
+    
+    expect(isSorted).to.be.true;
+  }
+
+  
 };

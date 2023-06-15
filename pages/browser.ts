@@ -70,5 +70,9 @@ export class Browser {
       return false;
     }
   }
+  public async assertIsNotVisible(element: WebElement): Promise<void> {
+    const isDisplayed = await element.isDisplayed();
+    assert.isFalse(isDisplayed, 'Element is displayed');
+  }
   
 }

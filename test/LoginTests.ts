@@ -3,7 +3,7 @@ import { LoginPage } from '../pages/loginPage';
 import { Browser } from '../pages/browser';
 import { data } from '../support/data';
 
-describe.skip('Login Tests', () => {
+describe('Login Tests', () => {
   let browser: Browser;
   let loginPage: LoginPage;
 
