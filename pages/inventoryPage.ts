@@ -6,8 +6,6 @@ export class InventoryPage {
   private browser: Browser;
 
   //selector
-  private cartButton = By.id("shopping_cart_container")
-  private menuButton = By.id("react-burger-menu-btn")
   private sortMenu = By.css('[data-test="product_sort_container"]')
   private inventoryList = By.className('inventory_list');
   private inventoryItem = By.css('.inventory_list > .inventory_item');
@@ -36,6 +34,17 @@ export class InventoryPage {
     inventoryItems.forEach(async (inventoryItem) => {
       await this.browser.assertWebElementVisibility(inventoryItem);
     });
+  }
+  public async addFIrstItemToCart(): Promise<void> {
+    const inventoryList = await this.browser.get(this.inventoryList);
+    const inventoryItems = await inventoryList.findElements(this.inventoryItem);
+    const item = inventoryItems[0]
+    const addToCartButton = await item.findElement(this.addToCartButton);
+    await this.browser.assertWebElementVisibility(addToCartButton)
+    
+    await addToCartButton.click()
+    const removeButton = await item.findElement(this.removeButton)
+    await this.browser.assertWebElementVisibility(removeButton)
   }
   public async addRandomItemToCart(): Promise<void> {
     const inventoryList = await this.browser.get(this.inventoryList);
