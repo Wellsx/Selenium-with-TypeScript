@@ -25,7 +25,7 @@ Ensure you have the following software installed on your system:
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/Wellsx/Selenium-with-TypeScript.git
    ```
 
 2. Install the dependencies:
